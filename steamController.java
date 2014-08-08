@@ -1,0 +1,175 @@
+import java.net.*;
+import java.io.*;
+import net.sf.json.*;
+import org.apache.commons.lang.exception.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import javax.imageio.*;
+import javax.swing.*;
+import java.util.*;
+/**
+Controls the acquisition of data from the steam server
+@author Robert Webb*/
+public class steamController
+{
+	private JSONObject player1Data;
+	private String profileURL;
+	public steamController() 
+	{
+		String myID = "76561197998239131";
+		String otherID = "76561198019781680";
+		profileURL = ("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=6817A4536489DBAD08C0D8B1258144A0&steamids=" + myID);
+		getData();		
+	}
+	
+	/**read the URL of the webservice
+	@param webservice The desired webservice (in this case a steam community profile*/
+	public String readURL(String webservice) throws Exception
+	{
+		URL oracle = new URL(webservice);
+		BufferedReader in = new BufferedReader(
+			new InputStreamReader(
+			oracle.openStream()));
+		
+		String inputLine;
+		String result = "";
+		
+		while ((inputLine = in.readLine()) != null)
+			result = result + inputLine;
+		in.close();
+		return result;
+	}
+	
+	/**get the player data*/
+	public void getData()
+	{
+		String JSonString = null;
+		try 
+		{
+			JSonString = readURL(profileURL);
+		}
+		catch(Exception e)
+		{
+			System.out.println("bad URL");
+		}
+		JSONObject x = JSONObject.fromObject(JSonString);
+		JSONObject responseData = (JSONObject)(x.get("response"));
+		JSONArray playersArray = (JSONArray)(responseData.get("players"));
+		player1Data = (JSONObject)(playersArray.get(0));
+	}
+	/**get the player ID*/
+	public String getID()
+	{
+		String ID = (String)(player1Data.get("steamid"));
+		return ID;
+	}
+	
+	/**get the player's username*/
+	public String getUser()
+	{
+		String user = (String)(player1Data.get("personaname"));
+		return user;
+	}
+	
+	/**get the URL of the player's profile*/
+	public String getProfileURL()
+	{
+		return (String)(player1Data.get("profileurl"));
+	}
+	
+	/**check if the player is currently online*/
+	public String checkOnline()
+	{
+		int state = (Integer)(player1Data.get("personastate"));
+		if (state == 0)
+		{
+			return "Offline";
+		}
+		else if (state == 1)
+		{
+			return "Online";
+		}
+		else if (state == 2)
+		{
+			return "Busy";
+		}
+		else if (state == 3)
+		{
+			return "Away";
+		}
+		else if (state == 4)
+		{
+			return "Snooze";
+		}
+		else 
+		{
+			return "lost in a transdemensional vortex";
+		}
+	}
+	
+	/**returns the date the player was last online
+	have to convert the time(integer) to (long) and multiply by 1000 
+	because java expects milliseconds for time; however the JSON object returns
+	time as Unix time*/
+	public Date getLastOnline()
+	{
+		Date lastOnline = new Date();
+		long LongTime = ((long)(Integer)(player1Data.get("lastlogoff"))*1000);
+		lastOnline.setTime(LongTime);
+		lastOnline.toString();
+		return lastOnline;
+	}
+	
+	/**check what game the player is currently playing*/
+	public String checkGame()
+	{
+		String game = (String)(player1Data.get("gameextrainfo"));
+		return game;
+	}
+	
+	/**get the id for the game currently being played*/
+	public String checkGameID()
+	{
+		String ID = (String)(player1Data.get("gameid"));
+		return ID;
+	}
+	
+	/**get the servcer ip of the game currently being played*/
+	public String serverIP()
+	{
+		String IP = (String)(player1Data.get("gameserverip"));
+		return IP;
+	}
+	
+	/**get the player's current avatar*/ 
+	public BufferedImage getAvatar()
+	{
+		BufferedImage avatar = null;
+		String avatarURL = (String)(player1Data.get("avatarfull"));
+		try 
+		{
+			avatar = ImageIO.read(new URL(avatarURL));
+		}
+		catch (IOException e) 
+		{
+		}
+		return avatar;
+	}
+	
+	/**get an image for the game currently being played*/
+	public BufferedImage getGameImage()
+	{
+		BufferedImage image = null;
+		String imageURL = "http://cdn.steampowered.com/v/gfx/apps/" + checkGameID() + "/header_292x136.jpg";
+		try
+		{
+			image = ImageIO.read(new URL(imageURL));
+		}
+		catch (IOException e)
+		{
+		}
+		return image;
+	}
+		
+}

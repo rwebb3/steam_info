@@ -1,0 +1,27 @@
+{
+	"response": {
+		"players": [
+			{
+				"steamid": "76561197998239131",
+				"communityvisibilitystate": 3,
+				"profilestate": 1,
+				"personaname": "rubiks.cat",
+				"lastlogoff": 1321159881,
+				"profileurl": "http:\/\/steamcommunity.com\/id\/spiderobert\/",
+				"avatar": "http:\/\/media.steampowered.com\/steamcommunity\/public\/images\/avatars\/ba\/ba08779aee22189765c0eda87b95453ac250466e.jpg",
+				"avatarmedium": "http:\/\/media.steampowered.com\/steamcommunity\/public\/images\/avatars\/ba\/ba08779aee22189765c0eda87b95453ac250466e_medium.jpg",
+				"avatarfull": "http:\/\/media.steampowered.com\/steamcommunity\/public\/images\/avatars\/ba\/ba08779aee22189765c0eda87b95453ac250466e_full.jpg",
+				"personastate": 1,
+				"realname": "Robert Webb",
+				"primaryclanid": "103582791430122681",
+				"timecreated": 1209337656,
+				"gameextrainfo": "Blocks That Matter",
+				"gameid": "111800",
+				"loccountrycode": "US",
+				"locstatecode": "VA",
+				"loccityid": 3892
+			}
+		]
+		
+	}
+}
